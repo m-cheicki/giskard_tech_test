@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% for route in routes %}
+        <div>
+            <p>{{ route['origin'] }} -> {{ route['destination'] }}</p>
+            <p>{{ route['travel_time'] }} days</p>
+        </div>
+    {% endfor %}
+{% endblock %}

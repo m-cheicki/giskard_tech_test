@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Empire</title>
+    </head>
+    <body>
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('routes') }}">Routes</a>
+        </nav>
+        <hr>
+        <div>
+            {% block content %} {% endblock %}
+        </div>
+    </body>
+</html>
