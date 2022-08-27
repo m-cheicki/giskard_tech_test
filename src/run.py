@@ -38,18 +38,17 @@ def get_routes_from_origin(origin):
     return routes
 
 
-def get_routes_grouby(origin):
-    config = get_config()
-    DATABASE = os.path.join(PROJECT_ROOT, RELATIVE_PATH, config["routes_db"])
-    conn = get_db_connection(DATABASE)
-    routes = conn.execute(f"SELECT * FROM routes GROUP BY '{origin}'").fetchall()
-    conn.close()
-    return routes
+def get_route_from_origin(origin):
+    total_day = 0
+    while origin != "Endor":
+        routes = get_routes_from_origin(origin)
+        for i in range(len(routes)):
+            origin = routes[i]["destination"]
+            total_day = total_day + int(routes[i]["travel_time"])
+    print(total_day)
 
 
 # ROUTES
-
-
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -66,7 +65,7 @@ def upload_file():
 @app.route("/routes")
 def routes():
     routes = get_all_routes()
-
+    get_route_from_origin("Tatooine")
     return render_template("routes.html", routes=routes)
 
 
