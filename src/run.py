@@ -1,29 +1,74 @@
 import os
 import sqlite3
-from flask import Flask, render_template
+from flask import Flask, render_template, json, request
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
-DATABASE = os.path.join(PROJECT_ROOT, "static/examples/example1/", "universe.db")
+RELATIVE_PATH = "static/examples/example1/"
+EMPIRE_PATH = "static/empire/"
 
-# TODO: Read millenium facon's JSON file to retrieve routes_db
+
+def get_config():
+    CONFIG_FILE = os.path.join(PROJECT_ROOT, RELATIVE_PATH, "millennium-falcon.json")
+    return json.load(open(CONFIG_FILE))
 
 
-def get_db_connection():
-    conn = sqlite3.connect(DATABASE)
+def get_db_connection(filename):
+    conn = sqlite3.connect(filename)
     conn.row_factory = sqlite3.Row
     return conn
+
+
+def get_all_routes():
+    config = get_config()
+    DATABASE = os.path.join(PROJECT_ROOT, RELATIVE_PATH, config["routes_db"])
+    conn = get_db_connection(DATABASE)
+    routes = conn.execute("SELECT * FROM routes").fetchall()
+    conn.close()
+    return routes
+
+
+def get_routes_from_origin(origin):
+    config = get_config()
+    DATABASE = os.path.join(PROJECT_ROOT, RELATIVE_PATH, config["routes_db"])
+    conn = get_db_connection(DATABASE)
+    routes = conn.execute(f"SELECT * FROM routes WHERE origin = '{origin}'").fetchall()
+    conn.close()
+    return routes
+
+
+def get_routes_grouby(origin):
+    config = get_config()
+    DATABASE = os.path.join(PROJECT_ROOT, RELATIVE_PATH, config["routes_db"])
+    conn = get_db_connection(DATABASE)
+    routes = conn.execute(f"SELECT * FROM routes GROUP BY '{origin}'").fetchall()
+    conn.close()
+    return routes
+
+
+# ROUTES
+
 
 @app.route("/")
 def index():
     return render_template("index.html")
 
+
+@app.route("/upload", methods=["GET", "POST"])
+def upload_file():
+    if request.method == "POST":
+        empire = request.files["file"]
+        empire = json.load(empire)
+        return render_template("empire.html", empire=empire, probability=0)
+
+
 @app.route("/routes")
 def routes():
-    conn = get_db_connection()
-    routes = conn.execute("SELECT * FROM routes").fetchall()
-    conn.close()
+    routes = get_all_routes()
+
     return render_template("routes.html", routes=routes)
 
 
-app.run(debug=True)
+if __name__ == "__main__":
+    app.run(debug=True)

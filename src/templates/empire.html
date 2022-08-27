@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="empire-info">
+        <p>Countdown : {{empire['countdown']}}</p>
+        <p>Bounty hunters : </p>
+        {% for bh in empire['bounty_hunters'] %}
+            Will be present in {{ bh['planet'] }} on Day : {{ bh['day'] }}<br>
+        {% endfor %}
+        </p>
+    </div>
+
+    <div class="propability">
+        Probability : {{ probability }} %
+    </div>
+
+{% endblock %}

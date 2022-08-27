@@ -2,9 +2,6 @@
 
 {% block content %}
     {% for route in routes %}
-        <div>
-            <p>{{ route['origin'] }} -> {{ route['destination'] }}</p>
-            <p>{{ route['travel_time'] }} days</p>
-        </div>
+        <p>{{ route['origin'] }} to {{ route['destination'] }} : {{ route['travel_time'] }} days</p>
     {% endfor %}
 {% endblock %}

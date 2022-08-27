@@ -1,0 +1,75 @@
+:root {
+    --primary: #FFE81F;
+    --primary-opacity-20: #FFE81F33;
+    --primary-opacity-40: #FFE81F66;
+    --primary-opacity-50: #FFE81F7F;
+    --primary-opacity-80: #FFE81FCC;
+}
+
+@font-face {
+    font-family: 'star-wars';
+    src: url('./starjedi/Starjedi.ttf');
+}
+
+body {
+    font-family: 'star-wars';
+    background-color: black;
+    color: var(--primary);
+    letter-spacing: .1em;
+    text-align: center;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 48px;
+    border-bottom: 2px solid var(--primary-opacity-20);
+}
+
+a {
+    color: var(--primary);
+    opacity: 0.2;
+}
+
+a:hover {
+    opacity: 0.8;
+}
+
+.container {
+    padding: 64px;
+}
+
+.inputfile {
+    display: none;
+}
+
+.inputfile+label {
+    font-size: 1.5em;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    margin: 24px auto;
+    height: 500px;
+    border: 1px dashed var(--primary-opacity-40);
+    border-radius: 8px;
+}
+
+.inputfile:focus+label,
+.inputfile+label:hover {
+    cursor: pointer;
+    background-color: var(--primary-opacity-20);
+}
+
+.call-to-action {
+    background-color: var(--primary-opacity-80);
+    padding: 12px 48px;
+    margin: 12px auto;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.call-to-action:hover {
+    background-color: var(--primary);
+}
