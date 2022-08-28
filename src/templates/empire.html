@@ -11,7 +11,11 @@
     </div>
 
     <div class="propability">
-        Probability : {{ probability }} %
+        Probabilities : 
+        {% for item in probabilities %}
+            {{ probabilities[loop.index0] }},
+        {% endfor %}
+        
     </div>
 
 {% endblock %}
