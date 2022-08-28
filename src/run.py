@@ -101,15 +101,19 @@ def upload_file():
 @app.route("/routes")
 def routes():
     graph = create_graph()
-    paths = find_all_paths(graph, ("Tatooine"), "Endor")
-    print(paths)
+    paths = find_all_paths(graph, "Tatooine", "Endor")
     travels = []
-    for i in range(len(paths)): 
+    for i in range(len(paths)):
         path = paths[i]
-        traveling_times = 0 
-        for j in range(len(path) -1): 
-            traveling_times
-
+        total_travel_time = []
+        time = 0
+        for j in range(len(path) - 1):
+            traveling_times = get_travel_time_from_origin_to_destination(
+                path[j], path[j + 1]
+            )
+            time += traveling_times[0]["travel_time"]
+        total_travel_time.append(time)
+        print(total_travel_time)
     routes = get_all_routes()
     return render_template("routes.html", routes=routes)
 
