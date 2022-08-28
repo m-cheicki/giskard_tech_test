@@ -86,12 +86,19 @@ def find_all_paths(graph, start, end, path=[]):
 
 def get_days_of_travel_from_path(path):
     time = 0
-    for j in range(len(path) - 1):
+    for i in range(len(path) - 1):
         traveling_times = get_travel_time_from_origin_to_destination(
-            path[j], path[j + 1]
+            path[i], path[i + 1]
         )
         time += traveling_times[0]["travel_time"]
     return time
+
+
+def get_all_days_of_travel(paths):
+    travels = []
+    for _ in range(len(paths)):
+        travels.append(get_days_of_travel_from_path(paths[_]))
+    return travels
 
 
 # ROUTES
@@ -112,10 +119,7 @@ def upload_file():
 def routes():
     graph = create_graph()
     paths = find_all_paths(graph, "Tatooine", "Endor")
-    travels = []
-    for i in range(len(paths)):
-        path = paths[i]
-        travels.append(get_days_of_travel_from_path(path))
+    travels = get_all_days_of_travel(paths)
     routes = get_all_routes()
     return render_template("routes.html", routes=routes)
 
