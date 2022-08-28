@@ -38,14 +38,50 @@ def get_routes_from_origin(origin):
     return routes
 
 
-def get_route_from_origin(origin):
-    total_day = 0
-    while origin != "Endor":
-        routes = get_routes_from_origin(origin)
-        for i in range(len(routes)):
-            origin = routes[i]["destination"]
-            total_day = total_day + int(routes[i]["travel_time"])
-    print(total_day)
+def get_travel_time_from_origin_to_destination(origin, destination):
+    config = get_config()
+    DATABASE = os.path.join(PROJECT_ROOT, RELATIVE_PATH, config["routes_db"])
+    conn = get_db_connection(DATABASE)
+    travel_time = conn.execute(
+        f"SELECT travel_time FROM routes WHERE origin = '{origin}' AND destination = '{destination}'"
+    ).fetchall()
+    conn.close()
+    return travel_time
+
+
+def get_all_origin():
+    config = get_config()
+    DATABASE = os.path.join(PROJECT_ROOT, RELATIVE_PATH, config["routes_db"])
+    conn = get_db_connection(DATABASE)
+    routes = conn.execute(f"SELECT DISTINCT origin FROM routes").fetchall()
+    conn.close()
+    return routes
+
+
+def create_graph():
+    origins = get_all_origin()
+    graph = {}
+    for i in range(len(origins)):
+        destinations = get_routes_from_origin(origins[i]["origin"])
+        graph[origins[i]["origin"]] = [
+            destinations[_]["destination"] for _ in range(len(destinations))
+        ]
+    return graph
+
+
+def find_all_paths(graph, start, end, path=[]):
+    path = path + [start]
+    if start == end:
+        return [path]
+    if start not in graph:
+        return []
+    paths = []
+    for node in graph[start]:
+        if node not in path:
+            newpaths = find_all_paths(graph, node, end, path)
+            for newpath in newpaths:
+                paths.append(newpath)
+    return paths
 
 
 # ROUTES
@@ -64,8 +100,17 @@ def upload_file():
 
 @app.route("/routes")
 def routes():
+    graph = create_graph()
+    paths = find_all_paths(graph, ("Tatooine"), "Endor")
+    print(paths)
+    travels = []
+    for i in range(len(paths)): 
+        path = paths[i]
+        traveling_times = 0 
+        for j in range(len(path) -1): 
+            traveling_times
+
     routes = get_all_routes()
-    get_route_from_origin("Tatooine")
     return render_template("routes.html", routes=routes)
 
 
