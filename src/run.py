@@ -6,7 +6,6 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 RELATIVE_PATH = "static/examples/example1/"
-EMPIRE_PATH = "static/empire/"
 
 
 def get_config():
@@ -117,12 +116,13 @@ def upload_file():
 
 @app.route("/routes")
 def routes():
-    graph = create_graph()
-    paths = find_all_paths(graph, "Tatooine", "Endor")
-    travels = get_all_days_of_travel(paths)
     routes = get_all_routes()
     return render_template("routes.html", routes=routes)
 
 
 if __name__ == "__main__":
+    graph = create_graph()
+    paths = find_all_paths(graph, "Tatooine", "Endor")
+    travels = get_all_days_of_travel(paths)
+    print(travels)
     app.run(debug=True)
